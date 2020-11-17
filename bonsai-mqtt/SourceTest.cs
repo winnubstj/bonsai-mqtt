@@ -12,7 +12,7 @@ namespace Bonsai.MQTT
     {
         public override IObservable<int> Generate()
         {
-            Console.WriteLine("test");
+            //Console.WriteLine("test");
             return Observable.Return(0);
         }
     }
