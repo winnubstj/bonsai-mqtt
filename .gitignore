@@ -1,2 +1,5 @@
+# Visual Studio 2015 cache/options directory
+.vs/
+
 bonsai-mqtt/bin/
 bonsai-mqtt/obj/
