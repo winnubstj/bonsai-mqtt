@@ -22,30 +22,28 @@ namespace Bonsai.MQTT
         public int port { get; set; } = 1883;
         [Description("Topic to send message on")]
         public string topic { get; set; } = "test/";
-        public Publish()
-        {
-            Console.WriteLine("start up!");
-        }
+
         public override IObservable<string> Process(IObservable<string> source)
         {
             Connect();
             return source.Select(input =>
             {
-                Console.WriteLine(input);
+                PublishMsg(input);
                 return input;
-
             });
         }
         private void Connect()
         {
-            Console.WriteLine("Connect!");
+            Console.WriteLine($"Connect to MQTT on broker {broker}:{port}");
             // Connect to mqtt broker.
             #pragma warning disable 618
             client = new MqttClient(IPAddress.Parse(broker),port, false, null, null, MqttSslProtocols.None);
             string clientId = Guid.NewGuid().ToString();
             client.Connect(clientId);
-            // Send message.
-            client.Publish(topic, Encoding.UTF8.GetBytes("Hello there"), MqttMsgBase.QOS_LEVEL_EXACTLY_ONCE, false);
+        }
+        private void PublishMsg(string msg)
+        {
+            client.Publish(topic, Encoding.UTF8.GetBytes(msg), MqttMsgBase.QOS_LEVEL_EXACTLY_ONCE, false);
         }
     }
 }
