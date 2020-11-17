@@ -18,6 +18,7 @@
 
   <ItemGroup>
     <PackageReference Include="Bonsai.Core" Version="2.5.0" />
+    <PackageReference Include="M2Mqtt" Version="4.3.0" />
   </ItemGroup>
 
 </Project>
