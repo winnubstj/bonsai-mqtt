@@ -1,0 +1,23 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <Title>bonsai-mqtt</Title>
+    <Description>A package for MQTT messaging in MQTT</Description>
+    <Authors>Johan Winnubst</Authors>
+    <Copyright>Copyright ©  2020</Copyright>
+    <GeneratePackageOnBuild Condition="'$(Configuration)'=='Release'">true</GeneratePackageOnBuild>
+    <ProjectUrl></ProjectUrl>
+    <PackageLicenseExpression></PackageLicenseExpression>
+    <PackageIcon></PackageIcon>
+    <PackageOutputPath>..\bin\$(Configuration)</PackageOutputPath>
+    <PackageTags>Bonsai Rx bonsai-mqtt</PackageTags>
+    <TargetFramework>net472</TargetFramework>
+    <Features>strict</Features>
+    <Version>0.1.0</Version>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Bonsai.Core" Version="2.5.0" />
+  </ItemGroup>
+
+</Project>
