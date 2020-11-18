@@ -8,7 +8,7 @@ using System.Collections.Generic;
 namespace Bonsai.MQTT
 {
     [Description("Receive messages on mqtt topic")]
-    public class SourceTest : Source<int>
+    public class Topic : Source<int>
     {
         public override IObservable<int> Generate()
         {

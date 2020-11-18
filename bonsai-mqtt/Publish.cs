@@ -25,7 +25,7 @@ namespace Bonsai.MQTT
 
         public override IObservable<string> Process(IObservable<string> source)
         {
-            Connect();
+            Connect(); // Runs once
             return source.Select(input =>
             {
                 PublishMsg(input);
