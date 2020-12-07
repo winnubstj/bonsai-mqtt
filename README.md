@@ -1,7 +1,7 @@
 # bonsai-mqtt
 Package for MQTT messaging in Bonsai RX
 ## Install instructions.
-1. (Optional) Download and install [bonsai](https://bonsai-rx.org/docs/installation/)
+1. (Optional) Download and install [bonsai](https://bonsai-rx.org/docs/installation/).
 1. Open Bonsai and in the starting menu select: 'Manage Packages'.
 1. In lower left corner select: 'Settings'.
 1. Click on the 'Plus' button to add a new package.
