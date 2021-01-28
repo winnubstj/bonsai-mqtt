@@ -8,13 +8,15 @@ using uPLibrary.Networking.M2Mqtt;
 using uPLibrary.Networking.M2Mqtt.Messages;
 using System.Net;
 using System.Text;
+using uPLibrary.Networking.M2Mqtt;
+using uPLibrary.Networking.M2Mqtt.Messages;
 
 namespace Bonsai.MQTT
 {
     [WorkflowElementCategory(ElementCategory.Source)]
     [Description("Subscribe to messages on MQTT topic")]
 
-    public class Topic : Source<string>
+    public class Topic : Source<System.Reactive.EventPattern<MsgReceivedEventArgs>>
     {
         // Settings
         [Description("IP of MQTT message broker")]
@@ -24,20 +26,26 @@ namespace Bonsai.MQTT
         [Description("Topic to subscribe to")]
         public string topic { get; set; } = "test/";
 
-        public override IObservable<string> Generate()
+        public override IObservable<System.Reactive.EventPattern<MsgReceivedEventArgs>> Generate()
         {
-            return Observable.Create<string>((observer, cancellationToken) =>
+            using (var client = new SubscribeClient(broker, port, topic))
             {
-                return Task.Factory.StartNew(() =>
-                {
-                    observer.OnNext("test");
-                    while (!cancellationToken.IsCancellationRequested)
-                    {
-                    }
-                });
+                return Observable.FromEventPattern<MsgReceivedEventArgs>(h => client.MsgReceived += h, h => client.MsgReceived -= h);
             }
+/*            return Observable.Create<string>((observer, cancellationToken) =>
+            {
+                using (var client = new SubscribeClient(broker, port, topic))
+                {
+                    return Task.Factory.StartNew(() =>
+                    {
+                        observer.OnNext("test");
+                        while (!cancellationToken.IsCancellationRequested)
+                        {
+                        }
+                    });
+                }
+            }*/
 
-            );
 /*            return Observable.Create<string>((observer, cancellationToken) =>
             {
                 return Task.Factory.StartNew(() =>
