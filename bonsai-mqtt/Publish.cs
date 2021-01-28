@@ -12,9 +12,8 @@ using System.Text;
 namespace Bonsai.MQTT
 {
     [Description("Publish messages on MQTT topic")]
-    public class Publish:Sink<string>
+    public class Publish : Sink<string>
     {
-        private MqttClient client;
         // Settings
         [Description("IP of MQTT message broker")]
         public string broker { get; set; } = "127.0.0.1";
@@ -25,25 +24,14 @@ namespace Bonsai.MQTT
 
         public override IObservable<string> Process(IObservable<string> source)
         {
-            Connect(); // Runs once
             return source.Select(input =>
             {
-                PublishMsg(input);
-                return input;
+                using (Client client = new Client(broker, port))
+                {
+                    client.Publish(topic, input);
+                    return input;
+                }
             });
-        }
-        private void Connect()
-        {
-            Console.WriteLine($"Connect to MQTT on broker {broker}:{port}");
-            // Connect to mqtt broker.
-            #pragma warning disable 618
-            client = new MqttClient(IPAddress.Parse(broker),port, false, null, null, MqttSslProtocols.None);
-            string clientId = Guid.NewGuid().ToString();
-            client.Connect(clientId);
-        }
-        private void PublishMsg(string msg)
-        {
-            client.Publish(topic, Encoding.UTF8.GetBytes(msg), MqttMsgBase.QOS_LEVEL_EXACTLY_ONCE, false);
         }
     }
 }
