@@ -9,11 +9,11 @@ using uPLibrary.Networking.M2Mqtt.Messages;
 using System.Net;
 using System.Text;
 using System.Diagnostics;
+using System.Reactive.Disposables;
 
 namespace Bonsai.MQTT
 {
     
-    public delegate void MsgHandler(SubscribeClient client, MsgReceivedEventArgs e);
 
     public class MsgReceivedEventArgs : EventArgs
     {
@@ -21,8 +21,8 @@ namespace Bonsai.MQTT
     }
     public class SubscribeClient : IDisposable
     {
-        public event MsgHandler Msg;
         public EventHandler<MsgReceivedEventArgs> MsgReceived; // event
+        public MsgReceivedEventArgs msgEvent = new MsgReceivedEventArgs();
 
         private Stopwatch stopwatch = new Stopwatch();
         private MqttClient client;
@@ -35,20 +35,24 @@ namespace Bonsai.MQTT
             client = new MqttClient(IPAddress.Parse(broker), port, false, null, null, MqttSslProtocols.None);
             client.Connect(Guid.NewGuid().ToString());
             // subscribe to topic
+            Console.WriteLine(topic);
             client.Subscribe(new string[] { topic }, new byte[] { MqttMsgBase.QOS_LEVEL_EXACTLY_ONCE });
-            
+            // register to message received
+            client.MqttMsgPublishReceived += MqttReceived;
+
         }
-        public void Publish(string topic, string msg)
+
+        void MqttReceived(object sender, MqttMsgPublishEventArgs e)
         {
-            client.Publish(topic, Encoding.UTF8.GetBytes(msg), MqttMsgBase.QOS_LEVEL_EXACTLY_ONCE, false);
+            Console.WriteLine("received");
+            string msg = System.Text.Encoding.Default.GetString(e.Message);
+            msgEvent.msg = msg;
+            MsgReceived?.Invoke(this, msgEvent);
         }
         public void Dispose()
         {
             Console.WriteLine($"bonsai-mqtt: disconnecting");
             client.Disconnect();
-            //stopwatch.Stop();
-            //Console.WriteLine($"elapsed: {stopwatch.ElapsedMilliseconds}");
-            //stopwatch.Reset();
         }
     }
 }
