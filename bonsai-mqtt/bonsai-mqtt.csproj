@@ -13,7 +13,7 @@
     <PackageTags>Bonsai Rx bonsai-mqtt</PackageTags>
     <TargetFramework>net472</TargetFramework>
     <Features>strict</Features>
-    <Version>0.1.4</Version>
+    <Version>0.1.5.9</Version>
 	<CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
   </PropertyGroup>
 
