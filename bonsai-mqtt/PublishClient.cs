@@ -14,11 +14,11 @@ namespace Bonsai.MQTT
         private MqttClient client;
         private bool verbose;
         /// <summary>
-        /// CLient for publishing messages to MQTT Broken
+        /// Client for publishing messages to MQTT Broken
         /// </summary>
         /// <param name="broker">Broker ip e.g. "127.0.0.1"</param>
         /// <param name="port">Port integer</param>
-        /// <param name="_verbose">flag for verbose output</param>
+        /// <param name="_verbose">Flag for verbose output</param>
         public PublishClient(string broker, int port, bool _verbose)
         {
             // set verbose status.
@@ -26,7 +26,7 @@ namespace Bonsai.MQTT
             //stopwatch.Start();
             if (verbose)
             {
-                Console.WriteLine($"bonsai-mqtt: Connect to MQTT on broker {broker}:{port}");
+                Console.WriteLine($"bonsai-mqtt: Connecting to MQTT on broker {broker}:{port}");
                 stopwatch.Start();
             }
             // Connect to mqtt broker.
@@ -51,9 +51,9 @@ namespace Bonsai.MQTT
             client.Disconnect();
             if (verbose)
             { 
-                Console.WriteLine($"bonsai-mqtt: disconnected");
+                Console.WriteLine($"bonsai-mqtt: Disconnected");
                 stopwatch.Stop();
-                Console.WriteLine($"bonsai-mqtt: elapsed {stopwatch.ElapsedMilliseconds}");
+                Console.WriteLine($"bonsai-mqtt: Elapsed {stopwatch.ElapsedMilliseconds}");
             }
         }
     }

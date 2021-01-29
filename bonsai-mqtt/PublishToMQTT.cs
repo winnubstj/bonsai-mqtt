@@ -5,7 +5,7 @@ using System.ComponentModel;
 namespace Bonsai.MQTT
 {
     [Description("Publish messages on MQTT topic")]
-    public class Publish : Sink<string>
+    public class PublishToMQTT : Sink<string>
     {
         // Settings
         [Description("IP of MQTT message broker")]

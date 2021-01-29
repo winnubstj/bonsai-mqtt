@@ -7,7 +7,7 @@ namespace Bonsai.MQTT
     [WorkflowElementCategory(ElementCategory.Source)]
     [Description("Subscribe to messages on MQTT topic")]
 
-    public class Topic : Source<System.Reactive.EventPattern<MsgReceivedEventArgs>>
+    public class SubscribeToMQTT : Source<System.Reactive.EventPattern<string>>
     {
         private SubscribeClient client;
         // Settings
@@ -18,10 +18,10 @@ namespace Bonsai.MQTT
         [Description("Topic to subscribe to")]
         public string topic { get; set; } = "test/";
 
-        public override IObservable<System.Reactive.EventPattern<MsgReceivedEventArgs>> Generate()
+        public override IObservable<System.Reactive.EventPattern<string>> Generate()
         {
             client = new SubscribeClient(broker, port, topic);
-            return Observable.FromEventPattern<MsgReceivedEventArgs>(h => client.MsgReceived += h, h => {client.MsgReceived -= h; client.Dispose(); });
+            return Observable.FromEventPattern<string>(h => client.MsgReceived += h, h => {client.MsgReceived -= h; client.Dispose(); });
         }
 
     }
