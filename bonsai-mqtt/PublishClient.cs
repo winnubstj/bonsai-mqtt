@@ -1,9 +1,5 @@
 ﻿using System;
-using System.Reactive.Linq;
-using System.ComponentModel;
-using System.Threading.Tasks;
-using System.Drawing.Design;
-using System.Collections.Generic;
+
 using uPLibrary.Networking.M2Mqtt;
 using uPLibrary.Networking.M2Mqtt.Messages;
 using System.Net;
@@ -12,11 +8,11 @@ using System.Diagnostics;
 
 namespace Bonsai.MQTT
 {
-    public class Client : IDisposable
+    public class PublishClient : IDisposable
     {
         private Stopwatch stopwatch = new Stopwatch();
         private MqttClient client;
-        public Client(string broker, int port)
+        public PublishClient(string broker, int port)
         {
             //stopwatch.Start();
             Console.WriteLine($"bonsai-mqtt: Connect to MQTT on broker {broker}:{port}");

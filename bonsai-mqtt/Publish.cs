@@ -1,15 +1,6 @@
 ﻿using System;
 using System.Reactive.Linq;
 using System.ComponentModel;
-using System.Threading.Tasks;
-using System.Drawing.Design;
-using System.Collections.Generic;
-using uPLibrary.Networking.M2Mqtt;
-using uPLibrary.Networking.M2Mqtt.Messages;
-using System.Net;
-using System.Text;
-using System.ComponentModel;
-using System.Threading.Tasks;
 
 namespace Bonsai.MQTT
 {
@@ -28,13 +19,12 @@ namespace Bonsai.MQTT
         {
             return source.Select(input =>
             {
-                using (Client client = new Client(broker, port))
+                using (PublishClient client = new PublishClient(broker, port))
                 {
                     client.Publish(topic, input);
                     return input;
                 }
             });
-
 
         }
 

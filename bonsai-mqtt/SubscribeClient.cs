@@ -1,15 +1,8 @@
 ﻿using System;
-using System.Reactive.Linq;
-using System.ComponentModel;
-using System.Threading.Tasks;
-using System.Drawing.Design;
-using System.Collections.Generic;
 using uPLibrary.Networking.M2Mqtt;
 using uPLibrary.Networking.M2Mqtt.Messages;
 using System.Net;
-using System.Text;
 using System.Diagnostics;
-using System.Reactive.Disposables;
 
 namespace Bonsai.MQTT
 {
