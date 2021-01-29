@@ -12,26 +12,49 @@ namespace Bonsai.MQTT
     {
         private Stopwatch stopwatch = new Stopwatch();
         private MqttClient client;
-        public PublishClient(string broker, int port)
+        private bool verbose;
+        /// <summary>
+        /// CLient for publishing messages to MQTT Broken
+        /// </summary>
+        /// <param name="broker">Broker ip e.g. "127.0.0.1"</param>
+        /// <param name="port">Port integer</param>
+        /// <param name="_verbose">flag for verbose output</param>
+        public PublishClient(string broker, int port, bool _verbose)
         {
+            // set verbose status.
+            verbose = _verbose;
             //stopwatch.Start();
-            Console.WriteLine($"bonsai-mqtt: Connect to MQTT on broker {broker}:{port}");
+            if (verbose)
+            {
+                Console.WriteLine($"bonsai-mqtt: Connect to MQTT on broker {broker}:{port}");
+                stopwatch.Start();
+            }
             // Connect to mqtt broker.
             #pragma warning disable 618
             client = new MqttClient(IPAddress.Parse(broker), port, false, null, null, MqttSslProtocols.None);
             client.Connect(Guid.NewGuid().ToString());
         }
+        /// <summary>
+        /// Publish message on MQTT topic
+        /// </summary>
+        /// <param name="topic">topic e.g.: home/test</param>
+        /// <param name="msg">message string. </param>
         public void Publish(string topic, string msg)
         {
             client.Publish(topic, Encoding.UTF8.GetBytes(msg), MqttMsgBase.QOS_LEVEL_EXACTLY_ONCE, false);
         }
+        /// <summary>
+        /// Dispose of client and disconnect.
+        /// </summary>
         public void Dispose()
         {
-            Console.WriteLine($"bonsai-mqtt: disconnecting");
             client.Disconnect();
-            //stopwatch.Stop();
-            //Console.WriteLine($"elapsed: {stopwatch.ElapsedMilliseconds}");
-            //stopwatch.Reset();
+            if (verbose)
+            { 
+                Console.WriteLine($"bonsai-mqtt: disconnected");
+                stopwatch.Stop();
+                Console.WriteLine($"bonsai-mqtt: elapsed {stopwatch.ElapsedMilliseconds}");
+            }
         }
     }
 }

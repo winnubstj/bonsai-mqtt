@@ -14,12 +14,14 @@ namespace Bonsai.MQTT
         public int port { get; set; } = 1883;
         [Description("Topic to send message on")]
         public string topic { get; set; } = "test/";
+        [Description("Verbose status messages")]
+        public bool verbose { get; set; } = false;
 
         public override IObservable<string> Process(IObservable<string> source)
         {
             return source.Select(input =>
             {
-                using (PublishClient client = new PublishClient(broker, port))
+                using (PublishClient client = new PublishClient(broker, port, verbose))
                 {
                     client.Publish(topic, input);
                     return input;
