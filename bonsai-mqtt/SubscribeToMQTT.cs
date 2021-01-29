@@ -17,10 +17,12 @@ namespace Bonsai.MQTT
         public int port { get; set; } = 1883;
         [Description("Topic to subscribe to")]
         public string topic { get; set; } = "test/";
+        [Description("Verbose status messages")]
+        public bool verbose { get; set; } = false;
 
         public override IObservable<System.Reactive.EventPattern<string>> Generate()
         {
-            client = new SubscribeClient(broker, port, topic);
+            client = new SubscribeClient(broker, port, topic, verbose);
             return Observable.FromEventPattern<string>(h => client.MsgReceived += h, h => {client.MsgReceived -= h; client.Dispose(); });
         }
 
