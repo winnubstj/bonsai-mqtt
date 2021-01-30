@@ -23,16 +23,37 @@ namespace Bonsai.MQTT
         {
             // set verbose status.
             verbose = _verbose;
-            //stopwatch.Start();
-            if (verbose)
-            {
-                Console.WriteLine($"bonsai-mqtt: Connecting to MQTT on broker {broker}:{port}");
-                stopwatch.Start();
-            }
+
             // Connect to mqtt broker.
             #pragma warning disable 618
-            client = new MqttClient(IPAddress.Parse(broker), port, false, null, null, MqttSslProtocols.None);
-            client.Connect(Guid.NewGuid().ToString());
+            try
+            {
+                client = new MqttClient(IPAddress.Parse(broker), port, false, null, null, MqttSslProtocols.None);
+                client.Connect(Guid.NewGuid().ToString());
+                client.MqttMsgPublished += Disconnect; // Ensures that message was actually send before disconnecting.
+                if (verbose)
+                {
+                    Console.WriteLine($"bonsai-mqtt: Connected to MQTT on broker {broker}:{port}");
+                    stopwatch.Start();
+                }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine($"bonsai-mqtt: Exception {e}");
+            }
+        }
+        void Disconnect(object sender, MqttMsgPublishedEventArgs e)
+        {
+            if (client.IsConnected)
+            {
+                client.Disconnect();
+                if (verbose)
+                {
+                    Console.WriteLine($"bonsai-mqtt: Disconnected");
+                    stopwatch.Stop();
+                    Console.WriteLine($"bonsai-mqtt: Elapsed {stopwatch.ElapsedMilliseconds} ms");
+                }
+            }
         }
         /// <summary>
         /// Publish message on MQTT topic
@@ -41,20 +62,20 @@ namespace Bonsai.MQTT
         /// <param name="msg">message string. </param>
         public void Publish(string topic, string msg)
         {
-            client.Publish(topic, Encoding.UTF8.GetBytes(msg), MqttMsgBase.QOS_LEVEL_EXACTLY_ONCE, false);
-        }
-        /// <summary>
-        /// Dispose of client and disconnect.
-        /// </summary>
-        public void Dispose()
-        {
-            client.Disconnect();
+            if (msg == null) { msg = ""; }
+            client.Publish(topic, Encoding.UTF8.GetBytes(msg), MqttMsgBase.QOS_LEVEL_EXACTLY_ONCE,false);
+            
             if (verbose)
-            { 
-                Console.WriteLine($"bonsai-mqtt: Disconnected");
-                stopwatch.Stop();
-                Console.WriteLine($"bonsai-mqtt: Elapsed {stopwatch.ElapsedMilliseconds}");
+            {
+                Console.WriteLine($"bonsai-mqtt: Published {msg} on {topic}");
             }
         }
+        public void Disconnect(object sender, EventArgs e) {  }
+
+        /// <summary>
+        /// Dispose of client.
+        /// </summary>
+        public void Dispose()
+        {}
     }
 }

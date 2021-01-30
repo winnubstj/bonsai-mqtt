@@ -28,11 +28,18 @@ namespace Bonsai.MQTT
         public SubscribeClient(string broker, int port, string topic, bool _verbose)
         {
             verbose = _verbose;
-            if (verbose) { Console.WriteLine($"bonsai-mqtt: Connecting to MQTT on broker {broker}:{port}"); }
             // Connect to mqtt broker.
-            #pragma warning disable 618
-            client = new MqttClient(IPAddress.Parse(broker), port, false, null, null, MqttSslProtocols.None);
-            client.Connect(Guid.NewGuid().ToString());
+            try
+            {
+                #pragma warning disable 618
+                client = new MqttClient(IPAddress.Parse(broker), port, false, null, null, MqttSslProtocols.None);
+                client.Connect(Guid.NewGuid().ToString());
+                if (verbose){Console.WriteLine($"bonsai-mqtt: Connected to MQTT on broker {broker}:{port}"); }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine($"bonsai-mqtt: Exception {e}");
+            }
             // subscribe to topic
             client.Subscribe(new string[] { topic }, new byte[] { MqttMsgBase.QOS_LEVEL_EXACTLY_ONCE });
             if (verbose) { Console.WriteLine($"bonsai-mqtt: Subscribed to topic: {topic}"); }

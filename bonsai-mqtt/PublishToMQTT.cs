@@ -19,14 +19,14 @@ namespace Bonsai.MQTT
 
         public override IObservable<string> Process(IObservable<string> source)
         {
-            return source.Select(input =>
-            {
-                using (PublishClient client = new PublishClient(broker, port, verbose))
+                return source.Select(input =>
                 {
-                    client.Publish(topic, input);
-                    return input;
-                }
-            });
+                    using (PublishClient client = new PublishClient(broker, port, verbose))
+                    {
+                        client.Publish(topic, input);
+                        return input;
+                    }
+                });
 
         }
 
